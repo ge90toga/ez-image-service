@@ -7,3 +7,4 @@ MarkupSafe==1.0
 Werkzeug==0.12.2
 scikit-image==0.13.1
 numpy==1.13.3
+opencv-python==3.3.0.10
