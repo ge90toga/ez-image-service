@@ -16,7 +16,7 @@ def download(url):
     return fPath
 
 
-@app.route('/imageOpt', methods=['POST'])
+@app.route('/api/imageOpt', methods=['POST'])
 def imageOpt():
     if not request.json:
         abort(400)
@@ -31,13 +31,7 @@ def imageOpt():
     return json.dumps(request.json['url'])
 
 
-# serve static resources:
-@app.route('/images/<path:path>')
-def send_page(path):
-    return send_from_directory('images/processed', path)
-
-
-@app.route('/')
+@app.route('/api/hello')
 def hello_world():
     return 'Hello, I am on heroku!'
 
