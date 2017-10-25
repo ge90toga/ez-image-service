@@ -3,7 +3,8 @@ import shutil
 import requests
 import json
 from imagelib.scan import CamImageScanner
-
+AWS_PUBLIC_DNS="http://ec2-13-210-137-102.ap-southeast-2.compute.amazonaws.com"
+from flask import Response
 app = Flask(__name__)
 
 def download(url):
@@ -28,7 +29,13 @@ def imageOpt():
     cam = CamImageScanner(fileNameExt, 'images/processed/' + file)
     cam.processImage()
     # delete both images on server after s3 upload
-    return json.dumps(request.json['url'])
+    url = AWS_PUBLIC_DNS+'/images/processed/'+ fileNameExt.split("/")[-1]
+    response = app.response_class(
+        response=json.dumps({'url':url}),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
 
 
 @app.route('/api/hello')
