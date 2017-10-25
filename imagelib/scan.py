@@ -46,9 +46,10 @@ class CamImageScanner:
 
         # convert the warped image to grayscale, then threshold it
         # to give it that 'black and white' paper effect
-        warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
-        warped = threshold_adaptive(warped, 251, offset=10)
-        warped = warped.astype("uint8") * 255
+
+        # warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
+        # warped = threshold_adaptive(warped, 251, offset=10)
+        # warped = warped.astype("uint8") * 255
 
         cv2.imwrite(self.outputPath, warped)
         print "Finished"
