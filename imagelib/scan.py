@@ -78,7 +78,8 @@ class CamImageScanner:
             angle = int(matches[0])
             print 'angle: ' + str(angle)
         except Exception as e:
-            print "Transformation Angle detection failed" + e
+            print "Transformation Angle detection failed"
+            print e
         print "start roate"
         if angle != 0:
             img = self.__rotateImage__(self.outputPath, angle)
