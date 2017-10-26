@@ -22,7 +22,7 @@ class CamImageScanner:
         # convert the image to grayscale, blur it, and find edges
         # in the image
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (5, 5), 0)
+        gray = cv2.GaussianBlur(image, (5, 5), 0)
         edged = cv2.Canny(gray, 55, 200)
 
         print "STEP 2: Find contours of paper"
@@ -90,6 +90,6 @@ class CamImageScanner:
         return imgUitl.rotate_bound(image, angle)
 
 if __name__ == "__main__":
-    x = CamImageScanner('test1.jpg', 'test1.jpg')
-    x.checkAndRotate()
+    x = CamImageScanner('bill-1.jpg', 'gas2-out.jpg')
+    x.processImage()
 
