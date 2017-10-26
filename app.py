@@ -4,7 +4,6 @@ import requests
 import json
 from imagelib.scan import CamImageScanner
 AWS_PUBLIC_DNS="http://ec2-13-210-137-102.ap-southeast-2.compute.amazonaws.com"
-from flask import Response
 app = Flask(__name__)
 
 def download(url):
@@ -15,7 +14,6 @@ def download(url):
         shutil.copyfileobj(response.raw, out_file)
     print "downloaded file"
     return fPath
-
 
 @app.route('/api/imageOpt', methods=['POST'])
 def imageOpt():
@@ -28,6 +26,7 @@ def imageOpt():
     print 'images/processed/' + file
     cam = CamImageScanner(fileNameExt, 'images/processed/' + file)
     cam.processImage()
+    cam.checkAndRotate()
     # delete both images on server after s3 upload
     url = AWS_PUBLIC_DNS+'/images/processed/'+ fileNameExt.split("/")[-1]
     response = app.response_class(
@@ -40,7 +39,7 @@ def imageOpt():
 
 @app.route('/api/hello')
 def hello_world():
-    return 'Hello, I am on heroku!'
+    return 'Hello, I am ezswitch image optimiser!'
 
 # run the app.
 if __name__ == "__main__":
