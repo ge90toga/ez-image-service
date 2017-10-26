@@ -23,7 +23,7 @@ class CamImageScanner:
         # in the image
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (5, 5), 0)
-        edged = cv2.Canny(gray, 75, 200)
+        edged = cv2.Canny(gray, 55, 200)
 
         print "STEP 2: Find contours of paper"
         # find the contours in the edged image, keeping only the
