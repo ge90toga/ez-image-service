@@ -72,11 +72,11 @@ class CamImageScanner:
         angle = 0
         try:
             x = subprocess.check_output(['tesseract', self.outputPath, '-', '-psm', '0'])
-            print x.decode()
-            pattern = r"Orientation in degrees:\s(\d+)"
-            matches = re.findall(pattern, x.decode())
-            angle = int(matches[0])
-            print 'angle: ' + str(angle)
+            lines =  x.decode().split('\n')
+            for line in lines:
+                print 'line: '+ line
+                if 'Orientation in degrees' in line:
+                    angle = 180
         except Exception as e:
             print "Transformation Angle detection failed"
             print e
@@ -94,7 +94,19 @@ class CamImageScanner:
         return imgUitl.rotate_bound(image, angle)
 
 
-# # run the app.
-if __name__ == "__main__":
-    x = CamImageScanner('./xxx.jpg', './xxxout.jpg')
-    x.checkAndRotate()
+# # # run the app.
+# if __name__ == "__main__":
+#     x = CamImageScanner('./xxx.jpg', './xxxout.jpg')
+#     x.checkAndRotate()
+
+# string = 'STEP 1: Edge Detection\n' \
+#          'STEP 2: Find contours of paper\nFinished Transformation\nOrientation: 2\n' \
+#          'Orientation in degrees: 180\n' \
+#          'Orientation confidence: 15.68\n' \
+#          'Script: 1\n' \
+#          'Script confidence: 14.14'
+#
+#
+# pattern = r"Orientation in degrees:\s(\d+)"
+# matches = re.findall(pattern, string)
+# print matches
