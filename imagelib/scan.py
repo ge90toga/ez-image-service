@@ -3,7 +3,7 @@ import cv2
 from skimage.filters import threshold_adaptive
 import subprocess
 import imutils as imgUitl
-from imagelib.pyimagesearch import imutils
+from pyimagesearch import imutils
 from pyimagesearch.transform import four_point_transform
 from errors.error import ContourNotFoundError, NotA4Error
 import re
@@ -92,3 +92,8 @@ class CamImageScanner:
         # load the image from disk
         image = cv2.imread(imagePath)
         return imgUitl.rotate_bound(image, angle)
+
+if __name__ == "__main__":
+    x = CamImageScanner('test1.jpg', 'test1.jpg')
+    x.checkAndRotate()
+
