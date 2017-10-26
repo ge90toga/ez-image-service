@@ -77,8 +77,8 @@ class CamImageScanner:
             matches = re.findall(pattern, x.decode())
             angle = int(matches[0])
             print 'angle: ' + str(angle)
-        except:
-            print "Transformation Angle detection failed"
+        except Exception as e:
+            print "Transformation Angle detection failed" + e
         print "start roate"
         if angle != 0:
             img = self.__rotateImage__(self.outputPath, angle)
