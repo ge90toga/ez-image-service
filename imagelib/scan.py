@@ -73,7 +73,7 @@ class CamImageScanner:
         try:
             x = subprocess.check_output(['tesseract', self.outputPath, '-', '-psm', '0'])
             print x.decode()
-            pattern = r"Rotate:\s(\d+)"
+            pattern = r"Orientation in degrees:\s(\d+)"
             matches = re.findall(pattern, x.decode())
             angle = int(matches[0])
             print 'angle: ' + str(angle)
