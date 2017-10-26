@@ -3,8 +3,11 @@ import shutil
 import requests
 import json
 from imagelib.scan import CamImageScanner
-AWS_PUBLIC_DNS="http://ec2-13-210-137-102.ap-southeast-2.compute.amazonaws.com"
+from errors.error import ContourNotFoundError, NotA4Error
+
+AWS_PUBLIC_DNS = "http://ec2-13-210-137-102.ap-southeast-2.compute.amazonaws.com"
 app = Flask(__name__)
+
 
 def download(url):
     fileNameExt = url.split("/")[-1]
@@ -14,6 +17,7 @@ def download(url):
         shutil.copyfileobj(response.raw, out_file)
     print "downloaded file"
     return fPath
+
 
 @app.route('/api/imageOpt', methods=['POST'])
 def imageOpt():
@@ -25,21 +29,44 @@ def imageOpt():
     file = fileNameExt.split("/")[-1]
     print 'images/processed/' + file
     cam = CamImageScanner(fileNameExt, 'images/processed/' + file)
-    cam.processImage()
-    cam.checkAndRotate()
+    try:
+        cam.processImage()
+    except ContourNotFoundError:
+        response = app.response_class(
+            response=json.dumps({'err': 'fail to find edge'}),
+            status=400,
+            mimetype='application/json'
+        )
+        return response
+    except NotA4Error:
+        response = app.response_class(
+            response=json.dumps({'err': 'image size is not a a4 paper'}),
+            status=400,
+            mimetype='application/json'
+        )
+        return response
+    try:
+        cam.checkAndRotate()
+    except:
+        response = app.response_class(
+            response=json.dumps({'err': 'rotation error'}),
+            status=400,
+            mimetype='application/json'
+        )
+        return response
     # delete both images on server after s3 upload
-    url = AWS_PUBLIC_DNS+'/images/processed/'+ fileNameExt.split("/")[-1]
+    url = AWS_PUBLIC_DNS + '/images/processed/' + fileNameExt.split("/")[-1]
     response = app.response_class(
-        response=json.dumps({'url':url}),
+        response=json.dumps({'url': url}),
         status=200,
         mimetype='application/json'
     )
     return response
 
-
 @app.route('/api/hello')
 def hello_world():
     return 'Hello, I am ezswitch image optimiser!'
+
 
 # run the app.
 if __name__ == "__main__":
