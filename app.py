@@ -3,7 +3,7 @@ import shutil
 import requests
 import json
 from imagelib.scan import CamImageScanner
-from errors.error import ContourNotFoundError, NotA4Error
+from imagelib.errors.error import ContourNotFoundError, NotA4Error
 
 AWS_PUBLIC_DNS = "http://ec2-13-210-137-102.ap-southeast-2.compute.amazonaws.com"
 app = Flask(__name__)
