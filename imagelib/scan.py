@@ -7,9 +7,6 @@ from pyimagesearch import imutils
 from pyimagesearch.transform import four_point_transform
 from errors.error import ContourNotFoundError, NotA4Error
 import re
-import numpy as np
-from scipy import ndimage
-
 
 class CamImageScanner:
     def __init__(self, imagePath, outputPath):
@@ -71,8 +68,7 @@ class CamImageScanner:
         # call(['tesseract', 'test.jpg', '-', '-psm', '0'])
         angle = 0
         try:
-            x = subprocess.check_output(['tesseract', self.outputPath, '-', '-psm', '0'])
-            print x.decode()
+            x = subprocess.check_output(['tesseract', self.outputPath, '-', '-psm', '0'], stderr=subprocess.STDOUT)
             pattern = r"Orientation in degrees:\s(\d+)"
             matches = re.findall(pattern, x.decode())
             angle = int(matches[0])
