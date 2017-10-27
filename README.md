@@ -10,3 +10,8 @@ Online reference
 
 nocache pip install
 install gcc
+
+EC2 Credential
+account alias: ‎212252083097
+user name: dev-ops
+user password: EzSwitch2017

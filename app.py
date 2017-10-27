@@ -4,10 +4,9 @@ import requests
 import json
 from imagelib.scan import CamImageScanner
 from imagelib.errors.error import ContourNotFoundError, NotA4Error
-
+# change PUBLIC DNS Name
 AWS_PUBLIC_DNS = "http://ec2-13-210-137-102.ap-southeast-2.compute.amazonaws.com"
 app = Flask(__name__)
-
 
 def download(url):
     fileNameExt = url.split("/")[-1]
@@ -17,7 +16,6 @@ def download(url):
         shutil.copyfileobj(response.raw, out_file)
     print "downloaded file"
     return fPath
-
 
 @app.route('/api/imageOpt', methods=['POST'])
 def imageOpt():
@@ -66,7 +64,6 @@ def imageOpt():
 @app.route('/api/hello')
 def hello_world():
     return 'Hello, I am ezswitch image optimiser!'
-
 
 # run the app.
 if __name__ == "__main__":

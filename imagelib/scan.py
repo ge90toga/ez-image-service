@@ -8,6 +8,7 @@ from pyimagesearch.transform import four_point_transform
 from errors.error import ContourNotFoundError, NotA4Error
 import re
 
+
 class CamImageScanner:
     def __init__(self, imagePath, outputPath):
         self.imagePath = imagePath
@@ -24,6 +25,11 @@ class CamImageScanner:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(image, (5, 5), 0)
         edged = cv2.Canny(gray, 55, 200)
+
+        cv2.imshow("Image", image)
+        cv2.imshow("Edged", edged)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
         print "STEP 2: Find contours of paper"
         # find the contours in the edged image, keeping only the
@@ -44,6 +50,11 @@ class CamImageScanner:
             else:
                 raise ContourNotFoundError('Cannot find 4 points')
 
+        # cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
+        # cv2.imshow("Outline", image)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
+
         # apply the four point transform to obtain a top-down
         # view of the original image
         warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
@@ -57,8 +68,8 @@ class CamImageScanner:
         height, width = warped.shape[:2]
         ratio1 = float(width) / float(height)
         ratio2 = float(height) / float(width)
-        if (ratio1 > 0.80 or ratio1 < 0.60) and (ratio2 > 0.80 or ratio2 < 0.60):
-            raise NotA4Error('Not a A4 paper: height: ' + str(height) + ' width: ' + str(width))
+        # if (ratio1 > 0.80 or ratio1 < 0.60) and (ratio2 > 0.80 or ratio2 < 0.60):
+        #     raise NotA4Error('Cropped Image is not a A4 paper: height: ' + str(height) + ' width: ' + str(width))
         cv2.imwrite(self.outputPath, warped)
         print "Finished Transformation"
         return self.outputPath
@@ -75,7 +86,7 @@ class CamImageScanner:
             print 'angle: ' + str(angle)
         except Exception as e:
             print "Transformation Angle detection failed"
-            print e
+            raise e
         print "start roate"
         if angle != 0:
             img = self.__rotateImage__(self.outputPath, angle)
@@ -89,7 +100,7 @@ class CamImageScanner:
         image = cv2.imread(imagePath)
         return imgUitl.rotate_bound(image, angle)
 
-if __name__ == "__main__":
-    x = CamImageScanner('bill-1.jpg', 'gas2-out.jpg')
-    x.processImage()
 
+if __name__ == "__main__":
+    x = CamImageScanner('148-0.jpg', 'xs.jpg')
+    x.processImage()
