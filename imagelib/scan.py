@@ -26,10 +26,10 @@ class CamImageScanner:
         gray = cv2.GaussianBlur(image, (5, 5), 0)
         edged = cv2.Canny(gray, 55, 200)
 
-        cv2.imshow("Image", image)
-        cv2.imshow("Edged", edged)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        # cv2.imshow("Image", image)
+        # cv2.imshow("Edged", edged)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
 
         print "STEP 2: Find contours of paper"
         # find the contours in the edged image, keeping only the
