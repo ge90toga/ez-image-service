@@ -38,7 +38,7 @@ def imageOpt():
         cam.checkAndRotate()
         cam.checkAndRotate()
     except:
-        return createResponse(400, {'err': 'Angle Detection Fail, possibly not a bill', 'url': url})
+        return createResponse(400, {'err': 'Orientation Detection Fail, possibly not a bill', 'url': url})
     try:
         cam.validateBill()
     except NotABillError:
