@@ -3,8 +3,9 @@ import shutil
 import requests
 import json
 from imagelib.scan import CamImageScanner
-from imagelib.errors.error import ContourNotFoundError, NotA4Error
-# change PUBLIC DNS Name
+from imagelib.errors.error import ContourNotFoundError, NotABillError
+
+# Change PUBLIC DNS Name
 AWS_PUBLIC_DNS = "http://ec2-13-210-137-102.ap-southeast-2.compute.amazonaws.com"
 app = Flask(__name__)
 
@@ -17,6 +18,7 @@ def download(url):
     print "downloaded file"
     return fPath
 
+
 @app.route('/api/imageOpt', methods=['POST'])
 def imageOpt():
     if not request.json:
@@ -26,45 +28,37 @@ def imageOpt():
     fileNameExt = download(request.json['url'])
     file = fileNameExt.split("/")[-1]
     print 'images/processed/' + file
-    cam = CamImageScanner(fileNameExt, 'images/processed/' + file)
+    url = AWS_PUBLIC_DNS + '/images/processed/' + fileNameExt.split("/")[-1]
+    cam = CamImageScanner(fileNameExt, 'images/processed/')
     try:
         cam.processImage()
     except ContourNotFoundError:
-        response = app.response_class(
-            response=json.dumps({'err': 'fail to find edge'}),
-            status=400,
-            mimetype='application/json'
-        )
-        return response
-    except NotA4Error:
-        response = app.response_class(
-            response=json.dumps({'err': 'image size is not a a4 paper'}),
-            status=400,
-            mimetype='application/json'
-        )
-        return response
+        return createResponse(400, {'err': 'fail to find edge'})
     try:
         cam.checkAndRotate()
+        cam.checkAndRotate()
     except:
-        response = app.response_class(
-            response=json.dumps({'err': 'rotation error'}),
-            status=400,
-            mimetype='application/json'
-        )
-        return response
+        return createResponse(400, {'err': 'Angle Detection Fail, possibly not a bill', 'url': url})
+    try:
+        cam.validateBill()
+    except NotABillError:
+        return createResponse(400, {'err': 'not a bill', 'url': url})
+    except Exception:
+        return createResponse(400, {'err': 'ocr cmd error', 'url': url})
     # delete both images on server after s3 upload
     url = AWS_PUBLIC_DNS + '/images/processed/' + fileNameExt.split("/")[-1]
-    response = app.response_class(
-        response=json.dumps({'url': url}),
-        status=200,
-        mimetype='application/json'
-    )
-    return response
+    return createResponse(201, {'url': url})
 
 @app.route('/api/hello')
 def hello_world():
     return 'Hello, I am ezswitch image optimiser!'
 
+def createResponse(statusCode, messageDict):
+    return app.response_class(
+        response=json.dumps(messageDict),
+        status=statusCode,
+        mimetype='application/json'
+    )
 # run the app.
 if __name__ == "__main__":
     app.debug = True

@@ -5,7 +5,7 @@ class ContourNotFoundError(Exception):
          return repr(self.value)
 
 
-class NotA4Error(Exception):
+class NotABillError(Exception):
     def __init__(self, value):
         self.value = value
 
