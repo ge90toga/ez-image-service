@@ -122,8 +122,7 @@ class CamImageScanner:
             if self.openTxtFileAndCheck(outputTxtFile) != True:
                 raise NotABillError('Image size after auto trop is not A4')
         except Exception as e:
-            print e
-            pass
+            raise e
         return False
 
     def openTxtFileAndCheck(self, path):
