@@ -18,7 +18,6 @@ def download(url):
     print "downloaded file"
     return fPath
 
-
 @app.route('/api/imageOpt', methods=['POST'])
 def imageOpt():
     if not request.json:
