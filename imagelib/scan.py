@@ -9,7 +9,7 @@ from errors.error import ContourNotFoundError, NotABillError
 import re
 from os import path
 
-VALIDBILL_MIN_CHAR = 1300
+VALIDBILL_MIN_CHAR = 600
 
 
 class CamImageScanner:
