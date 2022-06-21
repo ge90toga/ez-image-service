@@ -14,7 +14,7 @@ Jinja2==2.9.6
 MarkupSafe==1.0
 matplotlib==2.1.0
 networkx==2.0
-numpy==1.13.3
+numpy==1.22.0
 olefile==0.44
 opencv-python==3.3.0.10
 Pillow==4.3.0
